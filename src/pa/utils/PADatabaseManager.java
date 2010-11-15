@@ -9,11 +9,50 @@ import java.sql.Types;
 import java.util.Date;
 
 public class PADatabaseManager {
-	Connection con = null;
-	CallableStatement stmt = null;
+	private Connection con = null;
 
 	public PADatabaseManager() throws Exception {
 		initConnection();
+	}
+	
+	public Connection getConnection() {
+		return this.con;
+	}
+	
+	public void closeConnection() {
+		try {
+			if(con != null && !con.isClosed()) {
+				con.close();
+			}
+		}
+		catch(Exception exp) {
+			
+		}
+	}
+	
+	public boolean commit() {
+		try {
+			if(con != null && !con.isClosed()) {
+				con.commit();
+			}
+			return true;
+		}
+		catch(Exception exp) {
+			this.rollback();
+			return false;
+		}
+	}
+	
+	public boolean rollback() {
+		try {
+			if(con != null && !con.isClosed()) {
+				con.rollback();
+			}
+			return true;
+		}
+		catch(Exception exp) {
+			return false;
+		}
 	}
 
 	private void initConnection() throws Exception {
@@ -32,58 +71,4 @@ public class PADatabaseManager {
 		con.setAutoCommit(false);
 	}
 	
-	public boolean addTask(String message, String detail, String[] tags,
-			Date startDate, Date dueDate, int priority) {
-		try {
-
-			stmt = con.prepareCall("CALL SP_INS_TASK(?, ?, ?, ?, ?, ?);");
-			stmt.clearParameters();
-			stmt.setString(1, message);
-			stmt.setString(2, detail);
-			stmt.setTimestamp(3, (startDate == null) ? null : new Timestamp(startDate.getTime()));
-			stmt.setTimestamp(4, (dueDate == null) ? null : new Timestamp(dueDate.getTime()));
-			stmt.setInt(5, priority);
-			stmt.registerOutParameter(6, Types.INTEGER);
-			stmt.execute();
-			
-			int taskId = stmt.getInt(6);
-		
-			if(tags != null) {
-				for(int i = 0; i < tags.length; i++){
-					stmt = con.prepareCall("CALL SP_INS_TAG(?, ?)");
-					stmt.clearParameters();
-					stmt.setInt(1, taskId);
-					stmt.setString(2, tags[i]);
-					stmt.execute();
-				}
-			}
-			
-			con.commit();
-			
-			return true;
-		} catch (Exception exp) {
-			if(con!= null) {
-				try {
-					con.rollback();
-				} catch (Exception e) {}
-			}
-			exp.printStackTrace();
-			return false;
-		} finally {
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (Exception e) {
-				}
-			}
-
-			if (con != null) {
-				try {
-					con.close();
-				} catch (Exception e) {
-				}
-			}
-		}
-
-	}
 }
