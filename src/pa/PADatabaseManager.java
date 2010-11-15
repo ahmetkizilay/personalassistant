@@ -30,7 +30,7 @@ public class PADatabaseManager {
 		con = DriverManager.getConnection(url, user, password);
 	}
 	
-	public void addToDo(String message, String detail, String[] tags,
+	public boolean addToDo(String message, String detail, String[] tags,
 			Date startDate, Date dueDate) {
 		try {
 
@@ -54,8 +54,11 @@ public class PADatabaseManager {
 					stmt.execute();
 				}
 			}	
+			
+			return true;
 		} catch (Exception exp) {
 			exp.printStackTrace();
+			return false;
 		} finally {
 			if (stmt != null) {
 				try {
