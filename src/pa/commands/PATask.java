@@ -51,6 +51,16 @@ public abstract class PATask {
 		}
 	}
 	
+	protected boolean isPromptRequested() {
+		String[] promptArray = retrieveAnyOf(new String[]{"--interactive", "-i"});
+		if(promptArray == null) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	
 	public PACommand getCommand() {
 		return this.command;
 	}
@@ -61,11 +71,14 @@ public abstract class PATask {
 
 		createArgumentsTable(args);
 		paPrinter = new PAPrinter(isRunningOnConsole());
+		if(isPromptRequested()) {
+			prompt();
+		}
 		dbManager = new PADatabaseManager();
-
 	}
 
 	public abstract void execute();
+	protected abstract void prompt();
 	
 	
 }
