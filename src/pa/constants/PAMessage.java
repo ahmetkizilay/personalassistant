@@ -3,7 +3,8 @@ package pa.constants;
 public enum PAMessage {
 	ERROR (0, "Error"),
 	INFO (1, "Info"),
-	DEBUG (2, "Debug");
+	DEBUG (2, "Debug"),
+	PROMPT(3, "Prompt");
 	
 	
 	private final int code;
