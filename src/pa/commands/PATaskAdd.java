@@ -31,36 +31,23 @@ public class PATaskAdd extends PATask
 	@Override
 	public void execute()
 	{
-		try
+		if (!isPromptRequested())
 		{
-			if (!isPromptRequested())
-			{
-				message = getFlagMessage();
-				detail = getFlagDetail();
-				tagsArray = getFlagTags();
-				startDate = null;
-				dueDate = null;
-				priority = getFlagPriority();
+			message = getFlagMessage();
+			detail = getFlagDetail();
+			tagsArray = getFlagTags();
+			startDate = null;
+			dueDate = null;
+			priority = getFlagPriority();
 
-				if (message == null)
-				{
-					paPrinter.printErrorMessage("Message is required. Correct Your Syntax!");
-					return;
-				}
+			if (message == null)
+			{
+				paPrinter.printErrorMessage("Message is required. Correct Your Syntax!");
+				return;
 			}
-
-			if (dbManager.addTask(message, detail, tagsArray, startDate, dueDate, priority.getCode()))
-			{
-				paPrinter.printInfoMessage("Added A New Task!");
-			} else
-			{
-				paPrinter.printErrorMessage("Could Not Add The Task!");
-			}
-
-		} catch (Exception exp)
-		{
-			exp.printStackTrace();
 		}
+
+		addTask();
 	}
 	
 	private void addTask() {
