@@ -33,7 +33,11 @@ public class PATaskDebug extends PATask {
 		}
 		catch(Exception exp) {
 			exp.printStackTrace();
-		}
-		
+		}		
+	}
+	
+	@Override
+	protected void prompt() {
+		paPrinter.printErrorMessage("PATaskDebug.prompt not implemented yet!");
 	}
 }
