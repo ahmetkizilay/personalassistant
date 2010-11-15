@@ -25,27 +25,41 @@ public class PAPrinter {
 		printMessage(message, PAMessage.DEBUG);
 	}
 	
+	public void printPromptMessage(String message, String detail) {
+		String outputMessage = message;
+		
+		if(!detail.equals("")) {
+			outputMessage += "(" + detail + ")";
+		}		
+		outputMessage += ": ";
+		
+		printMessage(outputMessage, PAMessage.PROMPT);
+	}
+	
 	public void printMessage(String message, PAMessage messageType) {
 		String outputMessage = "";
 		if (isConsoleMode) {
 			switch (messageType) {
 			case INFO:
-				outputMessage = "\033[01;32m" + message + "\033[0m";
+				outputMessage = "\033[01;32m" + message + "\033[0m\n";
 				break;
 			case ERROR:
-				outputMessage = "\033[01;31m" + message + "\033[0m";
+				outputMessage = "\033[01;31m" + message + "\033[0m\n";
 				break;
 			case DEBUG:
+				outputMessage = message + "\n";
+				break;
+			case PROMPT:
 				outputMessage = message;
 				break;
 			default:
-				outputMessage = message;
+				outputMessage = message + "\n";
 				break;
 			}
 		} else {
-			outputMessage = messageType.getName() + ": " + message;
+			outputMessage = messageType.getName() + ": " + message + "\n";
 		}
 		
-		System.out.println(outputMessage);
+		System.out.print(outputMessage);
 	}
 }
