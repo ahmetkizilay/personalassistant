@@ -17,5 +17,10 @@ public class PATaskUndefined extends PATask {
 	public void execute(){
 		//throw new Exception("Undefined Command");
 	}
+	
+	@Override
+	protected void prompt() {
+		paPrinter.printErrorMessage("PATaskUndefined.prompt not implemented yet!");
+	}
 
 }
