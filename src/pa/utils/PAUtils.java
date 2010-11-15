@@ -1,8 +1,13 @@
 package pa.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import pa.constants.PACommand;
 
 public final class PAUtils {
+	private static SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy HH:mm");
+	
 	public static PACommand getTodoAction(String command) {
 		if (command.equals("--add") || command.equals("-a")) {
 			return PACommand.ADD;
@@ -19,5 +24,13 @@ public final class PAUtils {
 		} else {
 			return PACommand.UNDEFINED;
 		}
+	}
+	
+	public static Date parseDate(String dateString) throws Exception{
+		return formatter.parse(dateString);
+	}
+	
+	public static String formatDate(Date date) {
+		return formatter.format(date);
 	}
 }
