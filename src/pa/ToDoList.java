@@ -8,16 +8,18 @@ import java.util.List;
 
 public class ToDoList {
 
-	private ToDoCommandType command;
+	private String command;
 	private Hashtable<String, String[]> arguments = new Hashtable<String, String[]>();
-
+	private PAPrinter paPrinter;
+	
 	public ToDoList(String[] args) {
+		paPrinter = new PAPrinter();
 		parseInput(args);
 	}
 
 	private void parseInput(String[] args) {
 		if (args.length == 0) {
-			System.out.println("Arguments Needed");
+			paPrinter.printMessage("Arguments Needed", 0);
 			return;
 		}
 
@@ -39,17 +41,17 @@ public class ToDoList {
 	}
 
 	private void execute() {
-		if (command == ToDoCommandType.Add) {
+		if (command == PAConstants.COMMAND_ADD) {
 			executeAdd();
-		} else if (command == ToDoCommandType.Delete) {
+		} else if (command == PAConstants.COMMAND_DELETE) {
 			executeDelete();
-		} else if (command == ToDoCommandType.Edit) {
+		} else if (command == PAConstants.COMMAND_EDIT) {
 			executeEdit();
-		} else if (command == ToDoCommandType.Help) {
+		} else if (command == PAConstants.COMMAND_HELP) {
 			executeHelp();
-		} else if (command == ToDoCommandType.Search) {
+		} else if (command == PAConstants.COMMAND_SEARCH) {
 			executeSearch();
-		} else if (command == ToDoCommandType.Undefined) {
+		} else if (command == PAConstants.COMMAND_ADD) {
 			executeDebug();
 		}
 	}
@@ -63,11 +65,17 @@ public class ToDoList {
 			Date dueDate = null;
 
 			if (message == null) {
-				System.out.println("Message is required. Correct Your Syntax!");
+				paPrinter.printMessage("Message is required. Correct Your Syntax!", 0);
 				return;
 			}
 			
-			new PADatabaseManager().addToDo(message, detail, tags, startDate, dueDate);
+			PADatabaseManager dbManager = new PADatabaseManager();
+			if(dbManager.addToDo(message, detail, tags, startDate, dueDate)) {
+				paPrinter.printInfoMessage("Added A New Task!");
+			}
+			else {
+				paPrinter.printErrorMessage("Could Not Add The Task!");
+			}
 			
 		} catch (Exception exp) {
 			exp.printStackTrace();
@@ -75,35 +83,35 @@ public class ToDoList {
 	}
 
 	private void executeDelete() {
-		System.out.println("Delete: Not Implemented Yet!");
+		paPrinter.printErrorMessage("Delete: Not Implemented Yet!");
 	}
 
 	private void executeEdit() {
-		System.out.println("Edit: Not Implemented Yet");
+		paPrinter.printErrorMessage("Edit: Not Implemented Yet");
 	}
 
 	private void executeHelp() {
-		System.out.println("Help: Not Implemented Yet!");
+		paPrinter.printErrorMessage("Help: Not Implemented Yet!");
 	}
 
 	private void executeSearch() {
-		System.out.println("Search: Not Implemented Yet!");
+		paPrinter.printErrorMessage("Search: Not Implemented Yet!");
 	}
 
 	public void executeDebug() {
-		System.out.println("Command: " + command);
+		paPrinter.printDebugMessage("Command: " + command);
 		Enumeration<String> commands = arguments.keys();
 		while (commands.hasMoreElements()) {
 			String thisFlag = commands.nextElement();
-			System.out.print(thisFlag + ": ");
+			paPrinter.printDebugMessage(thisFlag + ": ");
 			String[] flagParams = arguments.get(thisFlag);
 			for (int i = 0; i < flagParams.length; i++) {
-				System.out.print(flagParams[i]);
+				paPrinter.printDebugMessage(flagParams[i]);
 
 				if (i != (flagParams.length - 1)) {
-					System.out.print(", ");
+					paPrinter.printDebugMessage(", ");
 				} else {
-					System.out.println();
+					paPrinter.printDebugMessage("");
 				}
 			}
 		}
@@ -143,19 +151,19 @@ public class ToDoList {
 		return null;
 	}
 
-	private ToDoCommandType getTodoAction(String command) {
+	private String getTodoAction(String command) {
 		if (command.equals("--add") || command.equals("-a")) {
-			return ToDoCommandType.Add;
+			return PAConstants.COMMAND_ADD;
 		} else if (command.equals("--edit") || command.equals("-e")) {
-			return ToDoCommandType.Edit;
+			return PAConstants.COMMAND_EDIT;
 		} else if (command.equals("--delete") || command.equals("-d")) {
-			return ToDoCommandType.Delete;
+			return PAConstants.COMMAND_DELETE;
 		} else if (command.equals("--search") || command.equals("-s")) {
-			return ToDoCommandType.Search;
+			return PAConstants.COMMAND_SEARCH;
 		} else if (command.equals("--help") || command.equals("-h")) {
-			return ToDoCommandType.Help;
+			return PAConstants.COMMAND_SEARCH;
 		} else {
-			return ToDoCommandType.Undefined;
+			return PAConstants.COMMAND_UNDEFINED;
 		}
 	}
 
