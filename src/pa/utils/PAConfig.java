@@ -1,4 +1,4 @@
-package pa;
+package pa.utils;
 
 import java.util.Properties;
 

@@ -1,4 +1,6 @@
-package pa;
+package pa.utils;
+
+import pa.constants.PAMessage;
 
 public class PAPrinter {
 	private boolean isConsoleMode;
@@ -12,28 +14,28 @@ public class PAPrinter {
 	}
 
 	public void printErrorMessage(String message) {
-		printMessage(message, 1);
+		printMessage(message, PAMessage.ERROR);
 	}
 	
 	public void printInfoMessage(String message) {
-		printMessage(message, 0);
+		printMessage(message, PAMessage.INFO);
 	}
 	
 	public void printDebugMessage(String message) {
-		printMessage(message, 2);
+		printMessage(message, PAMessage.DEBUG);
 	}
 	
-	public void printMessage(String message, int messageType) {
+	public void printMessage(String message, PAMessage messageType) {
 		String outputMessage = "";
 		if (isConsoleMode) {
 			switch (messageType) {
-			case PAConstants.MESSAGE_INFO:
+			case INFO:
 				outputMessage = "\033[01;32m" + message + "\033[0m";
 				break;
-			case PAConstants.MESSAGE_ERROR:
+			case ERROR:
 				outputMessage = "\033[01;31m" + message + "\033[0m";
 				break;
-			case PAConstants.MESSAGE_DEBUG:
+			case DEBUG:
 				outputMessage = message;
 				break;
 			default:
@@ -41,7 +43,7 @@ public class PAPrinter {
 				break;
 			}
 		} else {
-			outputMessage = message;
+			outputMessage = messageType.getName() + ": " + message;
 		}
 		
 		System.out.println(outputMessage);
