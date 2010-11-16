@@ -1,45 +1,95 @@
 package pa.utils;
 
-import pa.constants.PAMessage;
+import java.util.Date;
 
-public class PAPrinter {
+import pa.constants.PAMessage;
+import pa.constants.PAPriority;
+
+public class PAPrinter
+{
 	private boolean isConsoleMode;
 
-	public PAPrinter() {
+	public PAPrinter()
+	{
 		this(true);
 	}
-	
-	public PAPrinter(boolean consoleMode) {
+
+	public PAPrinter(boolean consoleMode)
+	{
 		this.isConsoleMode = consoleMode;
 	}
 
-	public void printErrorMessage(String message) {
+	public void printErrorMessage(String message)
+	{
 		printMessage(message, PAMessage.ERROR);
 	}
-	
-	public void printInfoMessage(String message) {
+
+	public void printInfoMessage(String message)
+	{
 		printMessage(message, PAMessage.INFO);
 	}
-	
-	public void printDebugMessage(String message) {
+
+	public void printDebugMessage(String message)
+	{
 		printMessage(message, PAMessage.DEBUG);
 	}
-	
-	public void printPromptMessage(String message, String detail) {
+
+	public void printTask(int id, String message, String detail, PAPriority priority, Date dueDate, String[] tagsArray)
+	{
+		String outputText = id + ":\t" + message + "\n";
+		outputText += "Priority:\t" + priority.getName() + "\n";
+		outputText += (detail != null && detail.length() > 0) ? "Detail: " + detail + "\n" : "";
+		outputText += "DueDate:\t" + ((dueDate == null) ? "Not Specified" : PAUtils.formatDate(dueDate)) + "\n";
+		outputText += "Tags: ";
+		if (tagsArray != null)
+		{
+			for (int i = 0; i < tagsArray.length; i++)
+			{
+				outputText += tagsArray[i];
+				outputText += (i != (tagsArray.length - 1)) ? (((i % 4) != 3) ? ", " : "\n\t") : "";
+			}
+		} else
+		{
+			outputText += "Not Specified";
+		}
+		System.out.println(colorizeByPriority(outputText, priority));
+	}
+
+	private String colorizeByPriority(String message, PAPriority priority)
+	{
+		switch (priority)
+		{
+		case HIGH:
+			return "\033[0;33m" + message + "\033[0m";
+		case MEDIUM:
+			return "\033[0;34m" + message + "\033[0m";
+		case LOW:
+			return "\033[0;35m" + message + "\033[0m";
+		default:
+			return message;
+		}
+	}
+
+	public void printPromptMessage(String message, String detail)
+	{
 		String outputMessage = message;
-		
-		if(!detail.equals("")) {
+
+		if (!detail.equals(""))
+		{
 			outputMessage += "(" + detail + ")";
-		}		
+		}
 		outputMessage += ": ";
-		
+
 		printMessage(outputMessage, PAMessage.PROMPT);
 	}
-	
-	public void printMessage(String message, PAMessage messageType) {
+
+	public void printMessage(String message, PAMessage messageType)
+	{
 		String outputMessage = "";
-		if (isConsoleMode) {
-			switch (messageType) {
+		if (isConsoleMode)
+		{
+			switch (messageType)
+			{
 			case INFO:
 				outputMessage = "\033[01;32m" + message + "\033[0m\n";
 				break;
@@ -56,10 +106,11 @@ public class PAPrinter {
 				outputMessage = message + "\n";
 				break;
 			}
-		} else {
+		} else
+		{
 			outputMessage = messageType.getName() + ": " + message + "\n";
 		}
-		
+
 		System.out.print(outputMessage);
 	}
 }
