@@ -4,6 +4,7 @@ import java.util.Date;
 
 import pa.constants.PAMessage;
 import pa.constants.PAPriority;
+import pa.constants.PAStatus;
 
 public class PAPrinter
 {
@@ -34,11 +35,12 @@ public class PAPrinter
 		printMessage(message, PAMessage.DEBUG);
 	}
 
-	public void printTask(int id, String message, String detail, PAPriority priority, Date dueDate, String[] tagsArray)
+	public void printTask(int id, String message, String detail, PAPriority priority, Date dueDate, PAStatus status, String[] tagsArray)
 	{
 		String outputText = id + ":\t" + message + "\n";
 		outputText += "Priority:\t" + priority.getName() + "\n";
 		outputText += (detail != null && detail.length() > 0) ? "Detail: " + detail + "\n" : "";
+		outputText += "Status: " + status.getName() + "\n";
 		outputText += "DueDate:\t" + ((dueDate == null) ? "Not Specified" : PAUtils.formatDate(dueDate)) + "\n";
 		outputText += "Tags: ";
 		if (tagsArray != null)
