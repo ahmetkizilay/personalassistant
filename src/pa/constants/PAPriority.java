@@ -30,4 +30,13 @@ public enum PAPriority {
 		}
 		return UNKNOWN;
 	}
+	
+	public static PAPriority parseCode(int code) {
+		for(PAPriority p : PAPriority.values()) {
+			if(p.getCode() == code) {
+				return p;
+			}
+		}
+		return UNKNOWN;
+	}
 }
