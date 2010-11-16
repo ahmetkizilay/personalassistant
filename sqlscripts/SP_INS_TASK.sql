@@ -10,10 +10,8 @@ IN in_priority INT,
 OUT out_task_id INT
 )
 BEGIN
--- DECLARE l_last_updated VARCHAR(19);
--- SELECT CONCAT(CURDATE(), ' ', CURTIME()) INTO l_last_updated;
 
-INSERT INTO `tasks`(`message`, `detail`, `startdate`, `duedate`, `priority`, `status`, `lastupdated`)
+INSERT INTO `tasks`(`message`, `detail`, `startdate`, `duedate`, `priority`, `status`, `lastedited`)
 VALUES(in_message, in_detail, in_start_date, in_due_date, in_priority, 0, CONCAT(CURDATE(), ' ', CURTIME()));
 
 SELECT MAX(`id`) INTO out_task_id FROM `tasks`;
