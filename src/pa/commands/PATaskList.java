@@ -12,6 +12,7 @@ import java.util.Scanner;
 import pa.constants.PACommand;
 import pa.constants.PAPriority;
 import pa.constants.PASortBy;
+import pa.constants.PAStatus;
 
 public class PATaskList extends PATask
 {
@@ -21,6 +22,7 @@ public class PATaskList extends PATask
 	private int recordCount;
 	private PASortBy sortBy;
 	private boolean isDetailed;
+	private boolean isAllTasks;
 	
 	public PATaskList(String[] args) throws Exception
 	{
@@ -35,6 +37,7 @@ public class PATaskList extends PATask
 			recordCount = getFlagRecordCount();
 			sortBy = getFlagSortBy();
 			isDetailed = getFlagIsDetailed();
+			isAllTasks = getFlagIsAllTasks();
 		}
 		
 		listTask();
@@ -88,6 +91,25 @@ public class PATaskList extends PATask
 				paPrinter.printErrorMessage(detailedString + " is not a valid input!");
 			}					
 		}
+		
+		while(true) {
+			paPrinter.printPromptMessage("Show All Tasks", "Y/N");
+			String allTasksString = scanner.nextLine();
+			if(allTasksString.equals("") || allTasksString.equalsIgnoreCase("n")) {
+				isAllTasks = false;
+				break;
+			} else if (allTasksString.equalsIgnoreCase("y")) {
+				isAllTasks = true;
+				break;
+			} else {
+				paPrinter.printErrorMessage(allTasksString + " is not a valid input!");
+			}					
+		}
+	}
+	
+	private boolean getFlagIsAllTasks() {
+		String[] allTasksArray = retrieveAnyOf(new String[] {"--all-tasks", "-at"});
+		return allTasksArray != null;
 	}
 	
 	private int getFlagRecordCount() {
@@ -128,7 +150,7 @@ public class PATaskList extends PATask
 		PreparedStatement stmt = null;
 		try {
 			String queryString = "SELECT * FROM `tasks` ";
-			queryString += "WHERE `status` = 0 ";
+			queryString += isAllTasks ? "" : "WHERE `status` = 0 ";
 			queryString += "ORDER BY `" + (sortBy != PASortBy.UNKNOWN ? sortBy.getName() : PASortBy.LASTEDITED.getName()) + "` ";
 			queryString += "LIMIT " + recordCount;
 			
@@ -140,12 +162,15 @@ public class PATaskList extends PATask
 				throw new Exception("Query yielded null results!");
 			}
 			
+			int resultsCount = 0;
 			while(rs.next()) {
+				resultsCount++;
 				int thisId = rs.getInt("id");
 				String thisMessage = rs.getString("message");				
 				int thisPriority = rs.getInt("priority");
 				String thisDetail = isDetailed ? rs.getString("detail") : "";	
 				
+				PAStatus thisStatus = PAStatus.parseCode(rs.getInt("status"));
 				Timestamp thisTimestamp = rs.getTimestamp("duedate");
 				Date thisDueDate = (thisTimestamp == null) ? null : new Date(rs.getTimestamp("duedate").getTime());
 				
@@ -161,10 +186,9 @@ public class PATaskList extends PATask
 				while(tagsRS.next()) {
 					tagsList.add(tagsRS.getString("name"));
 				}
-				paPrinter.printTask(thisId, thisMessage, thisDetail, PAPriority.parseCode(thisPriority), thisDueDate, tagsList.toArray(new String[tagsList.size()]));
+				paPrinter.printTask(thisId, thisMessage, thisDetail, PAPriority.parseCode(thisPriority), thisDueDate, thisStatus, tagsList.toArray(new String[tagsList.size()]));
 			}
-			
-			
+			paPrinter.printInfoMessage("Found " + resultsCount + " results");
 		}
 		catch(Exception exp) {
 			exp.printStackTrace();
