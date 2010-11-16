@@ -15,12 +15,12 @@ public final class PATaskFactory {
 		switch (command) {
 		case ADD:
 			return new PATaskAdd(args);
+		case LIST:
+			return new PATaskList(args);
 		case DEBUG:
 			return new PATaskDebug(args);
-		case UNDEFINED:
-			return new PATaskUndefined(args);
 		default:
-			return null;
+			return new PATaskUndefined(args);
 		}
 	}
 }
