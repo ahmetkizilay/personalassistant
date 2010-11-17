@@ -55,6 +55,7 @@ public class PAPrinter
 			outputText += "Not Specified";
 		}
 		System.out.println(colorizeByPriority(outputText, priority));
+		System.out.println("----o0o-----o0o-----");
 	}
 
 	private String colorizeByPriority(String message, PAPriority priority)
