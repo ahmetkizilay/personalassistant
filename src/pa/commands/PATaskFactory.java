@@ -17,6 +17,8 @@ public final class PATaskFactory {
 			return new PATaskAdd(args);
 		case LIST:
 			return new PATaskList(args);
+		case EDIT:
+			return new PATaskEdit(args);
 		case DEBUG:
 			return new PATaskDebug(args);
 		default:
