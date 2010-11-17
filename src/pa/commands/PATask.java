@@ -61,6 +61,15 @@ public abstract class PATask {
 		}
 	}
 	
+	protected String getExternalConfigFile() {
+		String[] configFileArray = retrieveAnyOf(new String[]{"--config-file", "-cf"});
+		if(configFileArray == null) {
+			return null;
+		} else {
+			return configFileArray[0];
+		}
+	}
+	
 	public PACommand getCommand() {
 		return this.command;
 	}
@@ -74,7 +83,7 @@ public abstract class PATask {
 		if(isPromptRequested()) {
 			prompt();
 		}
-		dbManager = new PADatabaseManager();
+		dbManager = new PADatabaseManager(getExternalConfigFile());
 	}
 
 	public abstract void execute();
