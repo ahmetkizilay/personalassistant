@@ -8,9 +8,12 @@ public class PADatabaseManager {
 	private Connection con = null;
 
 	public PADatabaseManager() throws Exception {
-		initConnection();
+		initConnection(null);
 	}
 	
+	public PADatabaseManager(String configFile) throws Exception {
+		initConnection(configFile);
+	}
 	public Connection getConnection() {
 		return this.con;
 	}
@@ -51,9 +54,9 @@ public class PADatabaseManager {
 		}
 	}
 
-	private void initConnection() throws Exception {
+	private void initConnection(String configFile) throws Exception {
 		
-		PAConfig paConfig = new PAConfig();
+		PAConfig paConfig = new PAConfig(configFile);
 		
 		Class.forName("com.mysql.jdbc.Driver");
 
