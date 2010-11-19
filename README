@@ -1,1 +1,40 @@
 PERSONAL ASSISTANT
+
+Implemented Methods:
+add, edit, list
+
+Usage:
+	java -classpath path/to/PersonalAssitant.ja:path/to/mysql-connector-java-5.1.13-bin.java pa.ToDoList [arguments..]
+	
+add:
+	[--add]                                 => add command 
+	[--interactive|-i]                      => activates prompt mode
+	[--message|-m] <message>                => message, required
+	[--detail|-d] <detail>                  => detail
+	[--start-date|-sd] <startdate>          => start date of the task
+	[--due-date|-dd] <duedate>              => due date of the task
+	[--priority|-p] <priority>              => priority, accepted values <Low|Medium|High>
+	[--tags|--tag|-t] <tags...>             => tags, can be more than one
+	
+edit:
+	[--edit]                                => edit command
+	[-interactive|-i]                       => activates prompt mode
+	[--task-id|-ti] <taskid>                => task id to be edited
+	[--status|-s] <status>                  => status, accepted values <Active|Completed|Discard>
+	[--complete|-c]                         => sets status to completed
+	[--detail|--detail-append|-da] <detail> => appends to the old detail
+	[--detail-override|-do] <detail>        => overrides the old detail
+	[--priority|-p] <priority>              => priority
+	
+list:
+	[--list]                                => list command
+	[-interactive|-i]                       => activates prompt mode
+	[--top|-t] <recordCount>                => the number of records to return
+	[--sort-by|-sb] <sortBy>                => sort by, accepted values <StartDate|DueDate|Priority|LastEdited>
+	[--detailed|-d]                         => list detail messages
+
+	
+
+TODO
+make a list of what else needs to be implemented.
+woo-three-fold-self-reference
