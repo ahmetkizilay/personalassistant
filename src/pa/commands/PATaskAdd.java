@@ -29,6 +29,17 @@ public class PATaskAdd extends PATask
 	}
 
 	@Override
+	public void help() {
+		String helpText = "Personal Asistant: Syntax for ADD \n";
+		helpText += "![] fields are required, [] fields are optional, <> fields are input\n";
+		helpText += "[--interactive|-i]\n";
+		helpText += "![--message|-m] <message> [--detail|-d] <detail> [--start-date|-sd] <startdate>\n"; 
+		helpText += "[--due-date|-dd] <duedate> [--priority|-p] <Low|Medium|High>\n";
+		helpText += "[--tags|--tag|-t] <+tags>\n";
+		paPrinter.printInfoMessage(helpText);
+	}
+	
+	@Override
 	public void execute()
 	{
 		if (!isPromptRequested())
@@ -36,9 +47,15 @@ public class PATaskAdd extends PATask
 			message = getFlagMessage();
 			detail = getFlagDetail();
 			tagsArray = getFlagTags();
-			startDate = null;
-			dueDate = null;
-			priority = getFlagPriority();
+			try {
+				startDate = getFlagStartDate();
+				dueDate = getFlagDueDate();
+			}
+			catch(Exception exp) {
+				paPrinter.printErrorMessage(exp.getMessage());
+				return;
+			}
+ 			priority = getFlagPriority();
 
 			if (message == null)
 			{
@@ -249,6 +266,36 @@ public class PATaskAdd extends PATask
 			return PAPriority.parseName(priorityArray[0]);
 		}
 		return PAPriority.LOW;
+	}
+	
+	private Date getFlagStartDate() throws Exception{
+		String[] startDateArray = retrieveAnyOf(new String[] {"--start-date", "-sd"});
+		if(startDateArray == null) {
+			return null;
+		}
+		else {
+			try{
+			return PAUtils.parseDate(startDateArray[0]);
+			}
+			catch(Exception exp) {
+				throw new Exception(startDateArray[0] + " is not a valid date!");
+			}
+		}
+	}
+	
+	private Date getFlagDueDate() throws Exception{
+		String[] dueDateArray = retrieveAnyOf(new String[] {"--due-date", "-dd"});
+		if(dueDateArray == null) {
+			return null;
+		}
+		else {
+			try{
+			return PAUtils.parseDate(dueDateArray[0]);
+			}
+			catch(Exception exp) {
+				throw new Exception(dueDateArray[0] + " is not a valid date!");
+			}
+		}
 	}
 	
 
