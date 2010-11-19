@@ -31,6 +31,16 @@ public class PATaskList extends PATask
 	}
 
 	@Override
+	public void help() {
+		String helpText = "Personal Asistant: Syntax for LIST \n";
+		helpText += "![] fields are required, [] fields are optional, <> fields are input\n";
+		helpText += "[--interactive|-i]\n";
+		helpText += "![--top|-t] <topCount> [--sort-By|-s] <StartDate|DueDate|Priority|LastEdited>\n"; 
+		helpText += "[--detailed|-d] [--all-tasks|-at]\n";
+		paPrinter.printInfoMessage(helpText);
+	}
+	
+	@Override
 	public void execute()
 	{
 		if(!isPromptRequested()) {
