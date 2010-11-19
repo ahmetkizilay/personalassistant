@@ -30,7 +30,7 @@ public class PATaskEdit extends PATask
 		String helpText = "Personal Asistant: Syntax for EDIT \n";
 		helpText += "![] fields are required, [] fields are optional, <> fields are input\n";
 		helpText += "[--interactive|-i]\n";
-		helpText += "![--task|-t] <taskId> [--status|-s] <Active|Completed|Discard> [--complete|-c]\n"; 
+		helpText += "![--task-id|-ti] <taskId> [--status|-s] <Active|Completed|Discard> [--complete|-c]\n"; 
 		helpText += "[[--detail|--detail-append|-da]|[--detail-override|-do]] <detail>\n";
 		helpText += "[--priority|-p] <priority>\n";
 		paPrinter.printInfoMessage(helpText);
@@ -264,7 +264,7 @@ public class PATaskEdit extends PATask
 	}
 	
 	private int getFlagTaskId() {
-		String[] taskIdString = retrieveAnyOf(new String[]{"--task", "-t"});
+		String[] taskIdString = retrieveAnyOf(new String[]{"--task-id", "-ti"});
 		
 		if(taskIdString != null) {
 			try {
