@@ -12,6 +12,10 @@ public class PATaskDebug extends PATask {
 	}
 
 	@Override
+	public void help() {
+	}
+	
+	@Override
 	public void execute(){
 		try {
 		paPrinter.printDebugMessage("Command: " + command);
