@@ -61,6 +61,16 @@ public abstract class PATask {
 		}
 	}
 	
+	protected boolean isHelpRequested() {
+		String[] helpArray = retrieveAnyOf(new String[]{"--help", "-h"});
+		if(helpArray == null) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	
 	protected String getExternalConfigFile() {
 		String[] configFileArray = retrieveAnyOf(new String[]{"--config-file", "-cf"});
 		if(configFileArray == null) {
@@ -80,14 +90,19 @@ public abstract class PATask {
 
 		createArgumentsTable(args);
 		paPrinter = new PAPrinter(isRunningOnConsole());
-		if(isPromptRequested()) {
-			prompt();
+		if(isHelpRequested()) {
+			help();
+		} else{
+			if(isPromptRequested()) {
+				prompt();
+			}
+			dbManager = new PADatabaseManager(getExternalConfigFile());
+			execute();
 		}
-		dbManager = new PADatabaseManager(getExternalConfigFile());
 	}
 
 	public abstract void execute();
 	protected abstract void prompt();
-	
+	protected abstract void help();
 	
 }
