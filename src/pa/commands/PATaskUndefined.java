@@ -14,6 +14,11 @@ public class PATaskUndefined extends PATask {
 	}
 	
 	@Override
+	public void help() {
+
+	}
+	
+	@Override
 	public void execute(){
 		//throw new Exception("Undefined Command");
 	}
