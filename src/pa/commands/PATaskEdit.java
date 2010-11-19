@@ -26,12 +26,24 @@ public class PATaskEdit extends PATask
 	}
 	
 	@Override
+	public void help() {
+		String helpText = "Personal Asistant: Syntax for EDIT \n";
+		helpText += "![] fields are required, [] fields are optional, <> fields are input\n";
+		helpText += "[--interactive|-i]\n";
+		helpText += "![--task|-t] <taskId> [--status|-s] <Active|Completed|Discard> [--complete|-c]\n"; 
+		helpText += "[[--detail|--detail-append|-da]|[--detail-override|-do]] <detail>\n";
+		helpText += "[--priority|-p] <priority>\n";
+		paPrinter.printInfoMessage(helpText);
+	}
+	
+	@Override
 	public void execute()
 	{
 		if(!isPromptRequested()) {
 			taskId = getFlagTaskId();
 			if(taskId < 1) {
 				paPrinter.printErrorMessage("Task Id is not valid");
+				return;
 			}
 			
 			if(getFlagIsCompleted()) {
@@ -58,14 +70,15 @@ public class PATaskEdit extends PATask
 		editTask();
 	}
 	
-	// TODO Implement method
 	private void editTask() {
 		PreparedStatement stmt = null;
 		try {
 			String queryString = "UPDATE `tasks` SET ";
+			boolean anythingToSet = false;
 			
 			if(status != PAStatus.UNKNOWN) {
 				queryString += "`status` = ?, ";
+				anythingToSet = true;
 			}
 			
 			if(!detailMode.equalsIgnoreCase("none")) {
@@ -74,14 +87,21 @@ public class PATaskEdit extends PATask
 				} else {
 					queryString += " `detail` = ?, ";
 				}
+				anythingToSet = true;
 			}
 			
 			if(priority != PAPriority.UNKNOWN) {
 				queryString += "`priority` = ?, ";
+				anythingToSet = true;
 			}
 			
 			if(dueDate != null) {
 				queryString += "`duedate` = ?, ";
+				anythingToSet = true;
+			}
+			
+			if(!anythingToSet) {
+				throw new Exception("Nothing is Specified For Edit. Check Your Syntax");
 			}
 			
 			queryString = queryString.substring(0, queryString.length() - 2);
@@ -135,18 +155,8 @@ public class PATaskEdit extends PATask
 			dbManager.closeConnection();
 
 		}
-//		paPrinter.printInfoMessage("EDIT Not Implemented Yet!");
 	}
 	
-	/* 
-	 * flags task id --task, -t
-	 * --complete, -c
-	 * --status, -s
-	 * --detail-append, --detail, -da
-	 * --detail-override, -do
-	 * --due-date, --due, -d
-	 * --priority, -p
-	 */
 	@Override
 	protected void prompt()
 	{
