@@ -21,6 +21,8 @@ public final class PATaskFactory {
 			return new PATaskEdit(args);
 		case DEBUG:
 			return new PATaskDebug(args);
+		case SEARCH:
+			return new PATaskSearch(args);
 		default:
 			return new PATaskUndefined(args);
 		}
