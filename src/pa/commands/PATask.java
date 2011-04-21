@@ -101,8 +101,19 @@ public abstract class PATask {
 		}
 	}
 
+	/***
+	 * The main functional logic for the specific command goes here.
+	 */
 	public abstract void execute();
+	
+	/***
+	 * This prepares the console prompt dialog for the specific command
+	 */
 	protected abstract void prompt();
+	
+	/***
+	 * This method displays the detailed syntax information for the specific command
+	 */
 	protected abstract void help();
 	
 }
